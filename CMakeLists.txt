@@ -80,10 +80,15 @@ message(STATUS "XEUS_UV_BUILD_TESTS:                ${XEUS_UV_BUILD_TESTS}")
 # ============
 
 set(xeus_REQUIRED_VERSION 4.0.3)
+set(xeus_zmq_REQUIRED_VERSION 1.0) # TODO: >=v2.0 once released
 
 if(NOT TARGET xeus AND NOT TARGET xeus-static)
     find_package(xeus ${xeus_REQUIRED_VERSION} REQUIRED)
     message(STATUS "Found xeus ${xeus_VERSION}")
+endif()
+
+if(NOT TARGET xeus-zmq AND NOT TARGET xeus-zmq-static)
+    find_package(xeus-zmq ${xeus_zmq_REQUIRED_VERSION} REQUIRED)
 endif()
 
 find_library(UVW_LIBRARY uvw)
