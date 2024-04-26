@@ -1,0 +1,8 @@
+name: xeus-uv
+channels:
+- conda-forge
+dependencies:
+- cmake
+- make
+- xeus>=4.0.3,<5.0
+- libuvw
