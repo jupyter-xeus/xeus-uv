@@ -9,23 +9,22 @@
 
 #include <memory>
 #include <iostream>
-
 #include <uvw.hpp>
+#include <zmq.hpp>
 
 #include "xshell_uv.hpp"
-#include "xserver_zmq_split.hpp"
+#include "xeus-zmq/xserver_zmq_split.hpp"
 
 namespace xeus
 {
-    xshell_uv::xshell_uv(zmq::context_t& context,
-                         const std::string& transport,
-                         const std::string& ip,
-                         const std::string& shell_port,
-                         const std::string& stdin_port,
-                         xserver_zmq_split* server,
+    xshell_uv::xshell_uv(xcontext& context,
+                         const xconfiguration& config,
+                         nl::json::error_handler_t eh,
+                         xserver_zmq_split::control_runner_ptr control,
+                         xserver_zmq_split::shell_runner_ptr shell,
                          std::shared_ptr<uvw::loop> loop_ptr,
                          std::unique_ptr<xhook_base> hook)
-        : xshell_base(context, transport, ip, shell_port, stdin_port, server)
+        : xserver_zmq_split(context, config, eh, std::move(control), std::move(shell))
         , p_loop{loop_ptr}
         , p_hook{std::move(hook)}
     {
@@ -37,10 +36,16 @@ namespace xeus
         create_polls();
     }
 
+    void xshell_uv::start_impl(xpub_message message)
+    {
+        // TODO
+    }
+
     void xshell_uv::create_polls()
     {
         // Get the file descriptor for the shell and controller sockets
-        zmq::fd_t shell_fd = m_shell.get(zmq::sockopt::fd);
+        // zmq::fd_t shell_fd = m_shell.get(zmq::sockopt::fd);
+        zmq::fd_t shell_fd = p_shell_runner->get_shell_fd();
         zmq::fd_t controller_fd = m_controller.get(zmq::sockopt::fd);
 
         // Create (libuv) poll handles and bind them to the loop
@@ -113,7 +118,7 @@ namespace xeus
             });
     }
 
-    void xshell_uv::run_impl()
+    void xshell_uv::run_shell()
     {
         p_shell_poll->start(uvw::poll_handle::poll_event_flags::READABLE);
         p_controller_poll->start(uvw::poll_handle::poll_event_flags::READABLE);

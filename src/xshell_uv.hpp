@@ -11,34 +11,37 @@
 #define XEUS_SHELL_UV_HPP
 
 #include <memory>
-
 #include <uvw.hpp>
+#include <zmq.hpp>
 
-#include "xshell_base.hpp"
-#include "xeus-zmq/xhook_base.hpp"
+#include "xeus/xeus_context.hpp"
+#include "xeus/xkernel_configuration.hpp"
+
+#include "xeus-zmq/xserver_zmq_split.hpp"
+
+#include "xeus-uv/xhook_base.hpp"
 
 namespace xeus
 {
 
 
-    class xshell_uv : public xshell_base
+    class XEUS_UV_API xshell_uv final : public xserver_zmq_split
     {
     public:
 
-        xshell_uv(zmq::context_t& context,
-                       const std::string& transport,
-                       const std::string& ip,
-                       const std::string& shell_port,
-                       const std::string& stdin_port,
-                       xserver_zmq_split* server,
-                       std::shared_ptr<uvw::loop> loop_ptr,
-                       std::unique_ptr<xhook_base> hook);
+        xshell_uv(xcontext& context,
+                  const xconfiguration& config,
+                  nl::json::error_handler_t eh,
+                  xserver_zmq_split::control_runner_ptr control,
+                  xserver_zmq_split::shell_runner_ptr shell,
+                  std::shared_ptr<uvw::loop> loop_ptr,
+                  std::unique_ptr<xhook_base> hook);
 
         virtual ~xshell_uv() = default;
 
     private:
 
-        void run_impl() override;
+        void start_impl(xpub_message message) override;
         void create_polls();
 
         std::shared_ptr<uvw::loop> p_loop{ nullptr };
