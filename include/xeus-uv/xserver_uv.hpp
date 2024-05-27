@@ -10,9 +10,16 @@
 #ifndef XEUS_SERVER_UV_HPP
 #define XEUS_SERVER_UV_HPP
 
-#include "xeus-uv/xeus-uv.hpp"
+#include <uvw.hpp>
 
-#include "xeus-zmq/xserver_zmq_split.hpp"
+#include "xeus-uv/xeus-uv.hpp"
+#include "xeus-uv/xhook_base.hpp"
+
+#include "xeus/xserver.hpp"
+#include "xeus/xeus_context.hpp"
+#include "xeus/xkernel_configuration.hpp"
+
+// TODO: include json
 
 
 namespace xeus

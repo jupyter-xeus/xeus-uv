@@ -7,8 +7,20 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#include "xserver_uv_shell_main.hpp"
-#include "xshell_uv_runner.hpp"
+#include <uvw.hpp>
+
+#include "xuv_runner.hpp"
+
+#include "xeus-uv/xhook_base.hpp"
+
+#include "xeus-zmq/xcontrol_default_runner.hpp"
+#include "xeus-zmq/xserver_zmq_split.hpp"
+
+#include "xeus/xserver.hpp"
+#include "xeus/xeus_context.hpp"
+#include "xeus/xkernel_configuration.hpp"
+
+// TODO: include json
 
 namespace xeus
 {
@@ -17,7 +29,7 @@ namespace xeus
     make_xserver_uv(xcontext& context,
                     const xconfiguration& config,
                     nl::json::error_handler_t eh,
-                    std::shared_ptr<uvw::loop> loop_ptr,
+                    std::shared_ptr<uvw::loop> loop,
                     std::unique_ptr<xhook_base> hook)
     {
         return make_xserver_shell

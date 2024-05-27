@@ -7,7 +7,14 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
+#include <uvw.hpp>
+#include <iostream>
+
 #include "xuv_runner.hpp"
+
+#include "xeus-uv/xeus-uv.hpp"
+#include "xeus-uv/xhook_base.hpp"
+
 
 namespace xeus
 {
@@ -43,7 +50,7 @@ namespace xeus
         // TODO: handle stop
     }
 
-    void xshell_uv::create_polls()
+    void xuv_runner::create_polls()
     {
         // Get the file descriptor for the shell and controller sockets
         // zmq::fd_t shell_fd = m_shell.get(zmq::sockopt::fd);

@@ -10,7 +10,13 @@
 #ifndef XEUS_UV_RUNNER_HPP
 #define XEUS_UV_RUNNER_HPP
 
+#include <uvw.hpp>
+
+#include "xeus-uv/xeus-uv.hpp"
+#include "xeus-uv/xhook_base.hpp"
+
 #include "xeus-zmq/xshell_runner.hpp"
+
 
 namespace xeus
 {
@@ -19,7 +25,8 @@ namespace xeus
     {
     public:
 
-        xuv_runner() = default; // TODO:
+        xuv_runner(std::shared_ptr<uvw::loop> loop,
+                   std::unique_ptr<xhook_base> hook);
 
         xuv_runner(const xuv_runner&) = delete;
         xuv_runner& operator=(const xuv_runner&) = delete;
@@ -38,7 +45,7 @@ namespace xeus
         std::shared_ptr<uvw::poll_handle> p_shell_poll{ nullptr };
         std::shared_ptr<uvw::poll_handle> p_controller_poll{ nullptr };
         std::unique_ptr<xhook_base> p_hook{ nullptr };
-    }
+    };
 
 } // namespace xeus
 
