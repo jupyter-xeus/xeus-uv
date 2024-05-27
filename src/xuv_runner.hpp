@@ -7,49 +7,39 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#ifndef XEUS_SHELL_UV_HPP
-#define XEUS_SHELL_UV_HPP
+#ifndef XEUS_UV_RUNNER_HPP
+#define XEUS_UV_RUNNER_HPP
 
-#include <memory>
-#include <uvw.hpp>
-#include <zmq.hpp>
-
-#include "xeus/xeus_context.hpp"
-#include "xeus/xkernel_configuration.hpp"
-
-#include "xeus-zmq/xserver_zmq_split.hpp"
-
-#include "xeus-uv/xhook_base.hpp"
+#include "xeus-zmq/xshell_runner.hpp"
 
 namespace xeus
 {
 
-
-    class XEUS_UV_API xshell_uv final : public xserver_zmq_split
+    class XEUS_UV_API xuv_runner final : public xshell_runner
     {
     public:
 
-        xshell_uv(xcontext& context,
-                  const xconfiguration& config,
-                  nl::json::error_handler_t eh,
-                  xserver_zmq_split::control_runner_ptr control,
-                  xserver_zmq_split::shell_runner_ptr shell,
-                  std::shared_ptr<uvw::loop> loop_ptr,
-                  std::unique_ptr<xhook_base> hook);
+        xuv_runner() = default; // TODO:
 
-        virtual ~xshell_uv() = default;
+        xuv_runner(const xuv_runner&) = delete;
+        xuv_runner& operator=(const xuv_runner&) = delete;
+        xuv_runner(xuv_runner&&) = delete;
+        xuv_runner& operator=(xuv_runner&&) = delete;
+
+        ~xuv_runner() override = default;
 
     private:
 
-        void start_impl(xpub_message message) override;
         void create_polls();
+
+        void run_impl() override;
 
         std::shared_ptr<uvw::loop> p_loop{ nullptr };
         std::shared_ptr<uvw::poll_handle> p_shell_poll{ nullptr };
         std::shared_ptr<uvw::poll_handle> p_controller_poll{ nullptr };
         std::unique_ptr<xhook_base> p_hook{ nullptr };
-    };
+    }
 
-}
+} // namespace xeus
 
-#endif
+#endif // XEUS_UV_RUNNER_HPP

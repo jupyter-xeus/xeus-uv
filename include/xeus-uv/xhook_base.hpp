@@ -45,4 +45,4 @@ namespace xeus
     };
 }
 
-#endif
+#endif // XHOOK_BASE_HPP

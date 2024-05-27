@@ -7,26 +7,16 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#include <memory>
-#include <iostream>
-#include <uvw.hpp>
-#include <zmq.hpp>
-
-#include "xshell_uv.hpp"
-#include "xeus-zmq/xserver_zmq_split.hpp"
+#include "xuv_runner.hpp"
 
 namespace xeus
 {
-    xshell_uv::xshell_uv(xcontext& context,
-                         const xconfiguration& config,
-                         nl::json::error_handler_t eh,
-                         xserver_zmq_split::control_runner_ptr control,
-                         xserver_zmq_split::shell_runner_ptr shell,
-                         std::shared_ptr<uvw::loop> loop_ptr,
-                         std::unique_ptr<xhook_base> hook)
-        : xserver_zmq_split(context, config, eh, std::move(control), std::move(shell))
-        , p_loop{loop_ptr}
-        , p_hook{std::move(hook)}
+
+    xuv_runner::xuv_runner(std::shared_ptr<uvw::loop> loop,
+                           std::unique_ptr<xhook_base> hook)
+        : xshell_runner()
+        , p_loop{ loop }
+        , p_hook{ hook }
     {
         if (!p_loop)
         {
@@ -36,17 +26,29 @@ namespace xeus
         create_polls();
     }
 
-    void xshell_uv::start_impl(xpub_message message)
+    void xuv_runner::run_impl()
     {
-        // TODO
+        p_shell_poll->start(uvw::poll_handle::poll_event_flags::READABLE);
+        p_controller_poll->start(uvw::poll_handle::poll_event_flags::READABLE);
+
+        if (p_hook)
+        {
+            p_hook->run(p_loop);
+        }
+        else
+        {
+            p_loop->run();
+        }
+
+        // TODO: handle stop
     }
 
     void xshell_uv::create_polls()
     {
         // Get the file descriptor for the shell and controller sockets
         // zmq::fd_t shell_fd = m_shell.get(zmq::sockopt::fd);
-        zmq::fd_t shell_fd = p_shell_runner->get_shell_fd();
-        zmq::fd_t controller_fd = m_controller.get(zmq::sockopt::fd);
+        zmq::fd_t shell_fd = get_shell_fd();
+        // zmq::fd_t controller_fd = m_controller.get(zmq::sockopt::fd); // TODO
 
         // Create (libuv) poll handles and bind them to the loop
         p_shell_poll = p_loop->resource<uvw::poll_handle>(shell_fd);
@@ -118,19 +120,4 @@ namespace xeus
             });
     }
 
-    void xshell_uv::run_shell()
-    {
-        p_shell_poll->start(uvw::poll_handle::poll_event_flags::READABLE);
-        p_controller_poll->start(uvw::poll_handle::poll_event_flags::READABLE);
-
-        if (p_hook)
-        {
-            p_hook->run(p_loop);
-        }
-        else
-        {
-            p_loop->run();
-        }
-    }
-
-}
+} // namespace xeus
