@@ -98,11 +98,13 @@ find_path(UVW_INCLUDE_DIR uvw.hpp)
 set(XEUS_UV_HEADERS
     ${XEUS_UV_INCLUDE_DIR}/xeus-uv/xeus-uv.hpp
     ${XEUS_UV_INCLUDE_DIR}/xeus-uv/xhook_base.hpp
+    ${XEUS_UV_INCLUDE_DIR}/xeus-uv/xserver_uv.hpp
 )
 
 set(XEUS_UV_SOURCES
-    ${XEUS_UV_SOURCE_DIR}/xshell_uv.hpp
-    ${XEUS_UV_SOURCE_DIR}/xshell_uv.cpp
+    ${XEUS_UV_SOURCE_DIR}/xserver_uv.cpp
+    ${XEUS_UV_SOURCE_DIR}/xuv_runner.cpp
+    ${XEUS_UV_SOURCE_DIR}/xuv_runner.hpp
 )
 
 # Targets and link
