@@ -49,7 +49,7 @@ message(STATUS "xeus-uv binary version: v${XEUS_UV_BINARY_VERSION}")
 
 # Compilation options
 option(XEUS_UV_BUILD_SHARED_LIBS "Build xeus shared library." ON)
-option(XEUS_UV_BUILD_STATIC_LIBS "Build xeus static library (default if BUILD_SHARED_LIBS is OFF)." ON)
+option(XEUS_UV_BUILD_STATIC_LIBS "Build xeus static library (default if BUILD_SHARED_LIBS is OFF)." OFF)
 option(XEUS_UV_STATIC_DEPENDENCIES "link statically with xeus dependencies" OFF)
 
 # Test options
