@@ -20,7 +20,7 @@
 #include "xeus/xeus_context.hpp"
 #include "xeus/xkernel_configuration.hpp"
 
-#include "nlohmann/json.hpp
+#include "nlohmann/json.hpp"
 
 
 namespace nl = nlohmann;
