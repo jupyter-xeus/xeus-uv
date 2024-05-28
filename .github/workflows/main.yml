@@ -54,7 +54,7 @@ jobs:
 
       - name: Build
         shell: bash -l {0}
-        run: make -j $(nproc)
+        run: make -j ${{ runner.os == 'macOS' && 3 || 4 }}
         working-directory: build
 
       - name: Test xeus-uv
