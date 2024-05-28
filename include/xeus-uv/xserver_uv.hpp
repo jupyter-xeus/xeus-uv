@@ -19,8 +19,10 @@
 #include "xeus/xeus_context.hpp"
 #include "xeus/xkernel_configuration.hpp"
 
-// TODO: include json
+#include "nlohmann/json.hpp
 
+
+namespace nl = nlohmann;
 
 namespace xeus
 {
