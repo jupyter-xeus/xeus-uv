@@ -47,8 +47,6 @@ namespace xeus
         {
             p_loop->run();
         }
-
-        // TODO: handle stop
     }
 
     void xuv_runner::create_polls()
@@ -94,6 +92,7 @@ namespace xeus
                     if (val == "stop")
                     {
                         send_controller(std::move(val));
+                        p_loop->stop();
                     }
                     else
                     {
