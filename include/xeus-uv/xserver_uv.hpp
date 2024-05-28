@@ -10,6 +10,7 @@
 #ifndef XEUS_SERVER_UV_HPP
 #define XEUS_SERVER_UV_HPP
 
+#include <memory>
 #include <uvw.hpp>
 
 #include "xeus-uv/xeus-uv.hpp"
@@ -32,8 +33,8 @@ namespace xeus
     make_xserver_uv(xcontext& context,
                     const xconfiguration& config,
                     nl::json::error_handler_t eh,
-                    std::shared_ptr<uvw::loop> loop,
-                    std::unique_ptr<xhook_base> hook);
+                    std::shared_ptr<uvw::loop> loop = nullptr,
+                    std::unique_ptr<xhook_base> hook = nullptr);
 
 } // namespace xeus
 
