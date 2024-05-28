@@ -51,8 +51,8 @@ jobs:
            -DXEUS_UV_BUILD_TESTS=ON \
            -DCMAKE_PREFIX_PATH=$CONDA_PREFIX \
            -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX \
-           -DXEUS_STATIC_DEPENDENCIES=${{ matrix.xeus_static_dependencies }} \
-           -DXEUS_BUILD_SHARED_LIBS=${{ matrix.xeus_build_shared_lib }}
+           -DXEUS_UV_STATIC_DEPENDENCIES=${{ matrix.xeus_static_dependencies }} \
+           -DXEUS_UV_BUILD_SHARED_LIBS=${{ matrix.xeus_build_shared_lib }}
         working-directory: build
 
       - name: Build
