@@ -66,7 +66,7 @@ namespace xeus
                 }
 
                 int ZMQ_DONTWAIT{ 1 }; // from zmq.h
-                if (auto msg = read_shell(ZMQ_DONTWAIT)) // xmessage
+                if (auto msg = read_shell(ZMQ_DONTWAIT))
                 {
                     notify_shell_listener(std::move(msg.value()));
                 }

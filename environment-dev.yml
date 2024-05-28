@@ -8,3 +8,4 @@ dependencies:
 - xeus-zmq>=2.0,<3.0
 - libuvw
 - nlohmann_json=3.11.3
+- xtl
