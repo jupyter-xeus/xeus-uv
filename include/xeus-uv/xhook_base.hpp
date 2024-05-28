@@ -10,9 +10,11 @@
 #ifndef XHOOK_BASE_HPP
 #define XHOOK_BASE_HPP
 
+#include <memory>
+#include <uvw.hpp>
+
 #include "xeus-uv.hpp"
 
-#include <uvw.hpp>
 
 namespace xeus
 {

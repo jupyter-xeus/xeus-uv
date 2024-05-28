@@ -10,6 +10,7 @@
 #ifndef XEUS_UV_RUNNER_HPP
 #define XEUS_UV_RUNNER_HPP
 
+#include <memory>
 #include <uvw.hpp>
 
 #include "xeus-uv/xeus-uv.hpp"

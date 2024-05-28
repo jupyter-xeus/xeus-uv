@@ -7,6 +7,8 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
+#include <memory>
+
 #include "xeus-uv/xhook_base.hpp"
 
 namespace xeus

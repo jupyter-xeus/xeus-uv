@@ -7,8 +7,9 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#include <uvw.hpp>
 #include <iostream>
+#include <memory>
+#include <uvw.hpp>
 
 #include "xuv_runner.hpp"
 
