@@ -93,13 +93,18 @@ jobs:
           environment-file: environment-dev.yml
           environment-name: xeus-uv
           init-shell: cmd.exe
+          create-args: >-
+            ninja
 
       - name: Make build directory
-        run: mkdir build
+        run: |
+          mkdir build
+          micromamba info
 
       - name: Configure cmake
         shell: cmd /C call {0}
         run: |
+          micromamba activate xeus-uv
           cmake .. ^
            -G Ninja ^
            -DCMAKE_BUILD_TYPE=Release ^
@@ -112,6 +117,7 @@ jobs:
       - name: Build
         shell: cmd /C call {0}
         run: |
+          micromamba activate xeus-uv
           set CL=/MP
           ninja install
         working-directory: build
