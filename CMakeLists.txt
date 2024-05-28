@@ -79,8 +79,8 @@ message(STATUS "XEUS_UV_BUILD_TESTS:                ${XEUS_UV_BUILD_TESTS}")
 # Dependencies
 # ============
 
-set(xeus_REQUIRED_VERSION 4.0.3)
-set(xeus_zmq_REQUIRED_VERSION 2.0)
+set(xeus_REQUIRED_VERSION 5.0)
+set(xeus_zmq_REQUIRED_VERSION 3.0)
 
 if(NOT TARGET xeus AND NOT TARGET xeus-static)
     find_package(xeus ${xeus_REQUIRED_VERSION} REQUIRED)

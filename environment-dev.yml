@@ -4,8 +4,7 @@ channels:
 dependencies:
 - cmake
 - make
-- xeus>=4.0.3,<5.0
-- xeus-zmq>=2.0,<3.0
+- xeus>=5.0,<6.0
+- xeus-zmq>=3.0,<4.0
 - libuvw
 - nlohmann_json=3.11.3
-- xtl
