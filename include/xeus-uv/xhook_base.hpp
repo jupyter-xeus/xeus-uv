@@ -40,7 +40,7 @@ namespace xeus
 
         virtual void pre_hook_impl() = 0;
         virtual void post_hook_impl() = 0;
-        virtual void run_impl(std::shared_ptr<uvw::loop> loop);
+        virtual void run_impl(std::shared_ptr<uvw::loop> loop) = 0;
 
     };
 }
