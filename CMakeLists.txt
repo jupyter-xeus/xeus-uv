@@ -59,13 +59,9 @@ option(XEUS_UV_BUILD_TESTS "xeus test suite" OFF)
 # ==========================
 
 if(XEUS_UV_STATIC_DEPENDENCIES)
-    set(CPPZMQ_TARGET_NAME cppzmq-static)
-    set(XEUS_TARGET_NAME xeus-static)
-    set(OPENSSL_USE_STATIC_LIBS ON CACHE BOOL "Linking statically with OpenSSL")
+    set(XEUS_UV_TARGET_NAME xeus-uv-static)
 else()
-    set(CPPZMQ_TARGET_NAME cppzmq)
-    set(XEUS_TARGET_NAME xeus)
-    set(OPENSSL_USE_STATIC_LIBS OFF CACHE BOOL "Not linking statically with OpenSSL")
+    set(XEUS_UV_TARGET_NAME xeus-uv)
 endif()
 
 # Print build configuration
@@ -135,7 +131,7 @@ macro(xeus_uv_create_target target_name linkage output_name)
 
     target_link_libraries(
         ${target_name}
-        PUBLIC ${XEUS_TARGET_NAME}
+        PUBLIC ${XEUS_UV_TARGET_NAME}
         PUBLIC ${UVW_LIBRARY}
     )
 
