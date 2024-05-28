@@ -30,10 +30,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Testing nproc
-        shell: bash -l {0}
-        run: echo "Number of procs $(nproc) total"
-
       - name: Install micromamba
         uses: mamba-org/setup-micromamba@v1
         with:
@@ -58,7 +54,7 @@ jobs:
 
       - name: Build
         shell: bash -l {0}
-        run: make -j$(nproc)
+        run: make -j $(nproc)
         working-directory: build
 
       - name: Test xeus-uv
