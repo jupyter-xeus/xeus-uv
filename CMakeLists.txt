@@ -101,6 +101,7 @@ set(XEUS_UV_HEADERS
 )
 
 set(XEUS_UV_SOURCES
+    ${XEUS_UV_SOURCE_DIR}/xhook_base.cpp
     ${XEUS_UV_SOURCE_DIR}/xserver_uv.cpp
     ${XEUS_UV_SOURCE_DIR}/xuv_runner.cpp
     ${XEUS_UV_SOURCE_DIR}/xuv_runner.hpp
