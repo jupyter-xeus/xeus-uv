@@ -35,9 +35,18 @@ int main(int argc, char* argv[])
     std::string file_name = (argc == 1) ? "connection.json" : argv[2];
     xeus::xconfiguration config = xeus::load_configuration(file_name);
 
+    std::cout << "[TEST] Get user name" << std::endl;
+    const std::string user_name{ xeus::get_user_name() };
+
+    std::cout << "[TEST] Create context" << std::endl;
+    auto context = xeus::make_zmq_context();
+
     std::cout << "[TEST] Create mock interpreter" << std::endl;
     using interpreter_ptr = std::unique_ptr<xeus::xmock_interpreter>;
     interpreter_ptr interpreter = std::make_unique<xeus::xmock_interpreter>();
+
+    std::cout << "[TEST] Create history manager" << std::endl;
+    auto history_manager = xeus::make_in_memory_history_manager();
 
     auto make_xserver_lambda = [&](xeus::xcontext& context,
                                    const xeus::xconfiguration& config,
@@ -48,12 +57,11 @@ int main(int argc, char* argv[])
 
     std::cout << "[TEST] Create kernel" << std::endl;
     xeus::xkernel kernel(config,
-                         xeus::get_user_name(),
-                         xeus::make_zmq_context(),
+                         user_name,
+                         std::move(context),
                          std::move(interpreter),
                          make_xserver_lambda,
-                         xeus::make_in_memory_history_manager(),
-                         nullptr); // logger
+                         std::move(history_manager));
 
     std::cout << "[TEST] Start kernel" << std::endl;
     kernel.start();

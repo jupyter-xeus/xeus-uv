@@ -60,6 +60,9 @@ if(nlohmann_json_FOUND)
     endif()
 endif()
 
+find_path(LIBUV_INCLUDE_DIR NAMES uv.h)
+find_library(LIBUV_LIBRARIES NAMES uv libuv)
+
 find_library(UVW_LIBRARY uvw)
 find_path(UVW_INCLUDE_DIR uvw.hpp)
 
@@ -91,7 +94,9 @@ configure_file(
 add_executable(test_kernel ${TEST_KERNEL_SOURCES})
 target_link_libraries(
     test_kernel
-    PUBLIC ${xeus-uv_TARGET} ${UVW_LIBRARY}
+    PUBLIC ${xeus-uv_TARGET}
+    PUBLIC uv
+    PUBLIC uvw
 )
 target_compile_features(test_kernel PRIVATE cxx_std_17)
 target_compile_definitions(test_kernel PUBLIC UVW_AS_LIB)

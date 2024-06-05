@@ -89,7 +89,7 @@ find_package(xeus-zmq ${xeus_zmq_REQUIRED_VERSION} REQUIRED)
 
 find_library(UVW_LIBRARY uvw)
 find_path(UVW_INCLUDE_DIR uvw.hpp)
-message(STATUS "Found UVW_LIBRARY: ${UVW_LIBRARY}")
+message(STATUS "Found uvw: ${UVW_LIBRARY}")
 
 # Source files
 # ============
@@ -134,9 +134,9 @@ macro(xeus_uv_create_target target_name linkage output_name)
 
     target_link_libraries(
         ${target_name}
-        PUBLIC ${UVW_LIBRARY}
         PUBLIC ${XEUS_TARGET_NAME}
         PUBLIC ${XEUS_ZMQ_TARGET_NAME}
+        PUBLIC ${UVW_LIBRARY}
     )
 
     if(APPLE)
