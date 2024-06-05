@@ -56,7 +56,7 @@ int main(int argc, char* argv[])
                                    const xeus::xconfiguration& config,
                                    nl::json::error_handler_t eh)
     {
-        return xeus::make_xserver_uv(context, config, eh, loop_ptr, std::move(hook_ptr));
+        return xeus::make_xserver_uv(context, config, eh, std::move(loop_ptr), std::move(hook_ptr));
     };
 
     std::cout << "[TEST] Create kernel" << std::endl;
@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
                          user_name,
                          std::move(context),
                          std::move(interpreter),
-                         xeus::make_xserver_shell_main,
+                         make_xserver_lambda,
                          std::move(history_manager));
 
     std::cout << "[TEST] Start kernel" << std::endl;
