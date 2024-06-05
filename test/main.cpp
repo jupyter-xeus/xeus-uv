@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
                          user_name,
                          std::move(context),
                          std::move(interpreter),
-                         make_xserver_lambda,
+                         xeus::make_xserver_uv,
                          std::move(history_manager));
 
     std::cout << "[TEST] Start kernel" << std::endl;
