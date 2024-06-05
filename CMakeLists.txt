@@ -136,6 +136,7 @@ macro(xeus_uv_create_target target_name linkage output_name)
         ${target_name}
         PUBLIC ${XEUS_TARGET_NAME}
         PUBLIC ${XEUS_ZMQ_TARGET_NAME}
+        PUBLIC uv
         PUBLIC ${UVW_LIBRARY}
     )
 

@@ -19,6 +19,7 @@ if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
 
     find_package(xeus-uv REQUIRED CONFIG)
     find_package(nlohmann_json QUIET CONFIG)
+    find_package(xeus-zmq REQUIRED)
 
     set(XEUS_UV_TEST_DIR ${CMAKE_CURRENT_LIST_DIR})
 endif ()
@@ -97,6 +98,7 @@ target_link_libraries(
     PUBLIC ${xeus-uv_TARGET}
     PUBLIC uv
     PUBLIC uvw
+    PUBLIC xeus-zmq
 )
 target_compile_features(test_kernel PRIVATE cxx_std_17)
 target_compile_definitions(test_kernel PUBLIC UVW_AS_LIB)

@@ -17,6 +17,7 @@
 #include "xeus-uv/xserver_uv.hpp"
 
 #include "xeus-zmq/xzmq_context.hpp"
+#include "xeus-zmq/xserver_zmq_split.hpp"
 
 #include "xeus/xhistory_manager.hpp"
 #include "xeus/xkernel.hpp"
@@ -25,6 +26,9 @@
 
 int main(int argc, char* argv[])
 {
+    auto ooo = xeus::ooo_test();
+    std::cout << ooo.m_name << std::endl;
+
     std::cout << "[TEST] Create loop" << std::endl;
     std::shared_ptr<uvw::loop> loop_ptr = uvw::loop::get_default();
 
@@ -48,19 +52,19 @@ int main(int argc, char* argv[])
     std::cout << "[TEST] Create history manager" << std::endl;
     auto history_manager = xeus::make_in_memory_history_manager();
 
-    auto make_xserver_lambda = [&](xeus::xcontext& context,
-                                   const xeus::xconfiguration& config,
-                                   nl::json::error_handler_t eh)
-    {
-        return xeus::make_xserver_uv(context, config, eh, loop_ptr, std::move(hook_ptr));
-    };
+    // auto make_xserver_lambda = [&](xeus::xcontext& context,
+    //                                const xeus::xconfiguration& config,
+    //                                nl::json::error_handler_t eh)
+    // {
+    //     return xeus::make_xserver_uv(context, config, eh, loop_ptr, std::move(hook_ptr));
+    // };
 
     std::cout << "[TEST] Create kernel" << std::endl;
     xeus::xkernel kernel(config,
                          user_name,
                          std::move(context),
                          std::move(interpreter),
-                         make_xserver_lambda,
+                         xeus::make_xserver_shell_main,
                          std::move(history_manager));
 
     std::cout << "[TEST] Start kernel" << std::endl;
