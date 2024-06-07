@@ -37,6 +37,12 @@ namespace xeus
                     std::shared_ptr<uvw::loop> loop = nullptr,
                     std::unique_ptr<xhook_base> hook = nullptr);
 
+    XEUS_UV_API
+    std::unique_ptr<xserver>
+    make_xserver_simple(xcontext& context,
+                    const xconfiguration& config,
+                    nl::json::error_handler_t eh);
+
     class XEUS_UV_API ooo_test
     {
         public:

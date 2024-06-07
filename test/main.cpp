@@ -56,10 +56,9 @@ int main(int argc, char* argv[])
                                    const xeus::xconfiguration& config,
                                    nl::json::error_handler_t eh)
     {
-        return xeus::make_xserver_uv(context,
+        return xeus::make_xserver_simple(context,
                                      config,
-                                     eh
-                                     );
+                                     eh);
     };
 
     std::cout << "[TEST] Create kernel" << std::endl;

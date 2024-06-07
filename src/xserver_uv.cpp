@@ -15,6 +15,7 @@
 #include "xeus-uv/xhook_base.hpp"
 
 #include "xeus-zmq/xcontrol_default_runner.hpp"
+#include "xeus-zmq/xshell_default_runner.hpp"
 #include "xeus-zmq/xserver_zmq_split.hpp"
 
 #include "xeus/xserver.hpp"
@@ -43,6 +44,21 @@ namespace xeus
             eh,
             std::make_unique<xcontrol_default_runner>(),
             std::make_unique<xuv_runner>(std::move(loop), std::move(hook))
+        );
+    }
+
+    std::unique_ptr<xserver>
+    make_xserver_simple(xcontext& context,
+                    const xconfiguration& config,
+                    nl::json::error_handler_t eh)
+    {
+        return make_xserver_shell
+        (
+            context,
+            config,
+            eh,
+            std::make_unique<xcontrol_default_runner>(),
+            std::make_unique<xshell_default_runner>()
         );
     }
 
