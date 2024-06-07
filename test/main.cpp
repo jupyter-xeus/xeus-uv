@@ -34,7 +34,6 @@ int main(int argc, char* argv[])
 
     std::cout << "[TEST] Create hook" << std::endl;
     std::unique_ptr<xeus::xhook> hook_ptr = std::make_unique<xeus::xhook>(42);
-    std::unique_ptr<xeus::xhook_base> hook_base_ptr = std::move(hook_ptr);
 
     std::cout << "[TEST] Load configuration" << std::endl;
     std::string file_name = (argc == 1) ? "connection.json" : argv[2];
@@ -53,15 +52,15 @@ int main(int argc, char* argv[])
     std::cout << "[TEST] Create history manager" << std::endl;
     auto history_manager = xeus::make_in_memory_history_manager();
 
-    auto make_xserver_lambda = [loop_ptr = std::move(loop_ptr), hook_base_ptr = std::move(hook_base_ptr)](xeus::xcontext& context,
+    auto make_xserver_lambda = [&](xeus::xcontext& context,
                                    const xeus::xconfiguration& config,
                                    nl::json::error_handler_t eh)
     {
         return xeus::make_xserver_uv(context,
                                      config,
                                      eh,
-                                     std::move(loop_ptr),
-                                     std::move(hook_base_ptr));
+                                     nullptr,
+                                     nullptr);
     };
 
     std::cout << "[TEST] Create kernel" << std::endl;
