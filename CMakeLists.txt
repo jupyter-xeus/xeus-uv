@@ -87,7 +87,11 @@ endif()
 
 find_package(xeus-zmq ${xeus_zmq_REQUIRED_VERSION} REQUIRED)
 
-find_library(UVW_LIBRARY uvw)
+find_library(LIBUV_LIBRARIES NAMES uv libuv)
+find_path(LIBUV_INCLUDE_DIR NAMES uv.h)
+message(STATUS "Found libuv: ${LIBUV_LIBRARIES}")
+
+find_library(UVW_LIBRARY NAMES uvw libuvw)
 find_path(UVW_INCLUDE_DIR uvw.hpp)
 message(STATUS "Found uvw: ${UVW_LIBRARY}")
 
@@ -130,13 +134,15 @@ macro(xeus_uv_create_target target_name linkage output_name)
         ${target_name}
         PUBLIC $<BUILD_INTERFACE:${XEUS_UV_INCLUDE_DIR}>
         $<INSTALL_INTERFACE:include>
+        PRIVATE ${LIBUV_INCLUDE_DIR}
+        PRIVATE ${UVW_INCLUDE_DIR}
     )
 
     target_link_libraries(
         ${target_name}
         PUBLIC ${XEUS_TARGET_NAME}
         PUBLIC ${XEUS_ZMQ_TARGET_NAME}
-        PUBLIC uv
+        PUBLIC ${LIBUV_LIBRARIES}
         PUBLIC ${UVW_LIBRARY}
     )
 
