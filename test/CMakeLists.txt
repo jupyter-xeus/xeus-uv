@@ -12,12 +12,13 @@
 
 cmake_minimum_required(VERSION 3.10)
 
+find_package(xeus-uv REQUIRED CONFIG)
+
 if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
     project(xeus-uv-test)
 
     enable_testing()
 
-    find_package(xeus-uv REQUIRED CONFIG)
     find_package(nlohmann_json QUIET CONFIG)
     find_package(xeus-zmq REQUIRED)
 
@@ -71,13 +72,13 @@ message(STATUS "Found uvw: ${UVW_LIBRARY}")
 
 find_package(xeus-zmq REQUIRED)
 
-# if (TARGET xeus-uv)
+if (TARGET xeus-uv)
 set(xeus-uv_TARGET xeus-uv)
 message(STATUS "Found xeus-uv shared library.")
-# elseif (TARGET xeus-uv-static)
-#     set(xeus-uv_TARGET xeus-uv-static)
-#     message(STATUS "Found xeus-uv static library.")
-# endif ()
+elseif (TARGET xeus-uv-static)
+    set(xeus-uv_TARGET xeus-uv-static)
+    message(STATUS "Found xeus-uv static library.")
+endif ()
 
 # Test_kernel_shell tests
 # =======================
