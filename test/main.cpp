@@ -52,7 +52,7 @@ int main(int argc, char* argv[])
     std::cout << "[TEST] Create history manager" << std::endl;
     auto history_manager = xeus::make_in_memory_history_manager();
 
-    auto make_xserver_lambda = [&](xeus::xcontext& context,
+    auto make_xserver_lambda = [loop_ptr = std::move(loop_ptr), hook_ptr = std::move(hook_ptr)](xeus::xcontext& context,
                                    const xeus::xconfiguration& config,
                                    nl::json::error_handler_t eh)
     {
