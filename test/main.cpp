@@ -58,9 +58,8 @@ int main(int argc, char* argv[])
     {
         return xeus::make_xserver_uv(context,
                                      config,
-                                     eh,
-                                     nullptr,
-                                     nullptr);
+                                     eh
+                                     );
     };
 
     std::cout << "[TEST] Create kernel" << std::endl;
