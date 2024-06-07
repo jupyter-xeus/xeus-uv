@@ -99,6 +99,12 @@ target_link_libraries(
     test_kernel
     PUBLIC ${xeus-uv_TARGET} ${LIBUV_LIBRARIES} ${UVW_LIBRARY} xeus-zmq
 )
+
+target_include_directories(
+    test_kernel
+    PRIVATE ${LIBUV_INCLUDE_DIR} ${UVW_INCLUDE_DIR}
+)
+
 target_compile_features(test_kernel PRIVATE cxx_std_17)
 target_compile_definitions(test_kernel PUBLIC UVW_AS_LIB)
 
