@@ -61,21 +61,23 @@ if(nlohmann_json_FOUND)
     endif()
 endif()
 
-find_path(LIBUV_INCLUDE_DIR NAMES uv.h)
 find_library(LIBUV_LIBRARIES NAMES uv libuv)
+find_path(LIBUV_INCLUDE_DIR NAMES uv.h)
+message(STATUS "Found libuv: ${LIBUV_LIBRARIES}")
 
-find_library(UVW_LIBRARY uvw)
+find_library(UVW_LIBRARY NAMES uvw libuvw)
 find_path(UVW_INCLUDE_DIR uvw.hpp)
+message(STATUS "Found uvw: ${UVW_LIBRARY}")
 
 find_package(xeus-zmq REQUIRED)
 
-if (TARGET xeus-uv)
-    set(xeus-uv_TARGET xeus-uv)
-    message(STATUS "Found xeus-uv shared library.")
-elseif (TARGET xeus-uv-static)
-    set(xeus-uv_TARGET xeus-uv-static)
-    message(STATUS "Found xeus-uv static library.")
-endif ()
+# if (TARGET xeus-uv)
+set(xeus-uv_TARGET xeus-uv)
+message(STATUS "Found xeus-uv shared library.")
+# elseif (TARGET xeus-uv-static)
+#     set(xeus-uv_TARGET xeus-uv-static)
+#     message(STATUS "Found xeus-uv static library.")
+# endif ()
 
 # Test_kernel_shell tests
 # =======================
@@ -95,10 +97,7 @@ configure_file(
 add_executable(test_kernel ${TEST_KERNEL_SOURCES})
 target_link_libraries(
     test_kernel
-    PUBLIC ${xeus-uv_TARGET}
-    PUBLIC uv
-    PUBLIC uvw
-    PUBLIC xeus-zmq
+    PUBLIC ${xeus-uv_TARGET} ${LIBUV_LIBRARIES} ${UVW_LIBRARY} xeus-zmq
 )
 target_compile_features(test_kernel PRIVATE cxx_std_17)
 target_compile_definitions(test_kernel PUBLIC UVW_AS_LIB)
