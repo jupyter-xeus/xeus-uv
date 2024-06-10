@@ -26,8 +26,6 @@
 
 int main(int argc, char* argv[])
 {
-    auto ooo = xeus::ooo_test();
-    std::cout << ooo.m_name << std::endl;
 
     std::cout << "[TEST] Create loop" << std::endl;
     std::shared_ptr<uvw::loop> loop_ptr = uvw::loop::get_default();
@@ -56,9 +54,11 @@ int main(int argc, char* argv[])
                                    const xeus::xconfiguration& config,
                                    nl::json::error_handler_t eh)
     {
-        return xeus::make_xserver_simple(context,
+        return xeus::make_xserver_uv(context,
                                      config,
-                                     eh);
+                                     eh,
+                                     loop_ptr,
+                                     std::move(hook_ptr));
     };
 
     std::cout << "[TEST] Create kernel" << std::endl;
@@ -66,7 +66,7 @@ int main(int argc, char* argv[])
                          user_name,
                          std::move(context),
                          std::move(interpreter),
-                         xeus::make_xserver_simple,
+                         make_xserver_lambda,
                          std::move(history_manager));
 
     std::cout << "[TEST] Start kernel" << std::endl;
