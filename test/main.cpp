@@ -24,7 +24,7 @@
 #include "xeus/xkernel_configuration.hpp"
 
 
-int main(int argc, char* argv[])
+int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 {
 
     std::cout << "[TEST] Create loop" << std::endl;
@@ -32,10 +32,6 @@ int main(int argc, char* argv[])
 
     std::cout << "[TEST] Create hook" << std::endl;
     std::unique_ptr<xeus::xhook> hook_ptr = std::make_unique<xeus::xhook>(42);
-
-    std::cout << "[TEST] Load configuration" << std::endl;
-    std::string file_name = (argc == 1) ? "connection.json" : argv[2];
-    xeus::xconfiguration config = xeus::load_configuration(file_name);
 
     std::cout << "[TEST] Get user name" << std::endl;
     const std::string user_name{ xeus::get_user_name() };
@@ -58,12 +54,11 @@ int main(int argc, char* argv[])
                                      config,
                                      eh,
                                      loop_ptr,
-                                     std::move(hook_ptr));
+                                    std::move(hook_ptr));
     };
 
     std::cout << "[TEST] Create kernel" << std::endl;
-    xeus::xkernel kernel(config,
-                         user_name,
+    xeus::xkernel kernel(user_name,
                          std::move(context),
                          std::move(interpreter),
                          make_xserver_lambda,
