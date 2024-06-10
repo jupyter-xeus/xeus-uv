@@ -10,3 +10,4 @@ dependencies:
 - libuvw
 - nlohmann_json=3.11.3
 - pytest
+- jupyter_kernel_test
