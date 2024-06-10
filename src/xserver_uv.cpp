@@ -47,19 +47,4 @@ namespace xeus
         );
     }
 
-    std::unique_ptr<xserver>
-    make_xserver_simple(xcontext& context,
-                    const xconfiguration& config,
-                    nl::json::error_handler_t eh)
-    {
-        return make_xserver_shell
-        (
-            context,
-            config,
-            eh,
-            std::make_unique<xcontrol_default_runner>(),
-            std::make_unique<xshell_default_runner>()
-        );
-    }
-
 } // namespace xeus
