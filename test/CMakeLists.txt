@@ -79,7 +79,7 @@ elseif (TARGET xeus-uv-static)
     message(STATUS "Found xeus-uv static library.")
 endif ()
 
-# Test_kernel_shell tests
+# Test_kernel tests
 # =======================
 
 set(TEST_KERNEL_SOURCES

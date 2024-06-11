@@ -13,7 +13,7 @@ import jupyter_kernel_test
 
 class XeusKernelTests(jupyter_kernel_test.KernelTests):
 
-    kernel_name = "test_kernel_shell"
+    kernel_name = "test_kernel"
     language_name = "cpp"
 
     code_hello_world = "hello, world"
@@ -42,7 +42,7 @@ class XeusKernelTests(jupyter_kernel_test.KernelTests):
 
 class XeusIopubWelcomeTests(jupyter_kernel_test.IopubWelcomeTests):
 
-    kernel_name = "test_kernel_shell"
+    kernel_name = "test_kernel"
     support_iopub_welcome = True
 
 if __name__ == '__main__':
