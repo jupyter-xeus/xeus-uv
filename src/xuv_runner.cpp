@@ -31,11 +31,12 @@ namespace xeus
             std::cerr << "No loop provided, using default loop." << std::endl;
             p_loop = uvw::loop::get_default();
         }
-        create_polls();
     }
 
     void xuv_runner::run_impl()
     {
+        create_polls();
+
         p_shell_poll->start(uvw::poll_handle::poll_event_flags::READABLE);
         p_controller_poll->start(uvw::poll_handle::poll_event_flags::READABLE);
 

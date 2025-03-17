@@ -7,35 +7,42 @@
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
 
-#ifndef XEUS_SERVER_UV_HPP
-#define XEUS_SERVER_UV_HPP
-
+#include <iostream>
 #include <memory>
 #include <uvw.hpp>
 
-#include "xeus-uv/xeus-uv.hpp"
+#include "xhook.hpp"
+
 #include "xeus-uv/xhook_base.hpp"
 
-#include "xeus/xserver.hpp"
-#include "xeus/xeus_context.hpp"
-#include "xeus/xkernel_configuration.hpp"
-
-#include "nlohmann/json.hpp"
-
-
-namespace nl = nlohmann;
 
 namespace xeus
 {
+    xhook::xhook(int x) : xhook_base(), counter{ x }
+    {
+    }
 
-    XEUS_UV_API
-    std::unique_ptr<xserver>
-    make_xserver_uv(xcontext& context,
-                    const xconfiguration& config,
-                    nl::json::error_handler_t eh,
-                    std::shared_ptr<uvw::loop> loop = nullptr,
-                    std::unique_ptr<xhook_base> hook = nullptr);
+    xhook::~xhook()
+    {
+        std::cout << "[HOOK] Destructor" << counter << std::endl;
+    }
+
+    void xhook::pre_hook_impl()
+    {
+        std::cout << "[HOOK] pre_hook_impl " << counter << std::endl;
+        ++counter;
+    }
+
+    void xhook::post_hook_impl()
+    {
+        std::cout << "[HOOK] post_hook_impl " << counter << std::endl;
+        ++counter;
+    }
+
+    void xhook::run_impl(std::shared_ptr<uvw::loop> loop)
+    {
+        std::cout << "[HOOK] run_impl " << counter << std::endl;
+        loop->run();
+    }
 
 } // namespace xeus
-
-#endif // XEUS_SERVER_UV_HPP
