@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, ubuntu-24.04, macos-12, macos-13]
+        os: [ubuntu-22.04, ubuntu-24.04, macos-13]
         xeus_static_dependencies: [0]
         xeus_build_shared_lib: [1]
         include:
@@ -31,7 +31,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install micromamba
-        uses: mamba-org/setup-micromamba@v1
+        uses: mamba-org/setup-micromamba@v2
         with:
           environment-file: environment-dev.yml
           environment-name: xeus-uv
@@ -54,7 +54,7 @@ jobs:
 
       - name: Build
         shell: bash -l {0}
-        run: make -j ${{ runner.os == 'macOS' && 3 || 4 }}
+        run: make -j 4
         working-directory: build
 
       - name: Test xeus-uv
@@ -86,7 +86,7 @@ jobs:
 
       # v1.9.0 does not automatically activate env on win
       - name: Install micromamba
-        uses: mamba-org/setup-micromamba@v1
+        uses: mamba-org/setup-micromamba@v2
         with:
           environment-file: environment-dev.yml
           environment-name: xeus-uv
