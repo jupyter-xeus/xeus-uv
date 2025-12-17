@@ -28,7 +28,7 @@ namespace xeus
     {
         if (!p_loop)
         {
-            std::cerr << "No loop provided, using default loop." << std::endl;
+            std::cout << "No loop provided, using default loop." << std::endl;
             p_loop = uvw::loop::get_default();
         }
         create_polls();
@@ -53,12 +53,26 @@ namespace xeus
     {
         // Get the file descriptor for the shell and controller sockets
         // and create (libuv) poll handles to bind them to the loop
-        p_shell_poll = p_loop->resource<uvw::poll_handle>(get_shell_fd());
-        p_controller_poll = p_loop->resource<uvw::poll_handle>(get_shell_controller_fd());
+
+        std::cout << "get filedescriptors" << std::endl;
+        
+        auto  fd_shell = get_shell_fd();
+        std::cout << "Shell FD: " << fd_shell << std::endl;
+        auto fd_controller = get_shell_controller_fd();
+        std::cout << "Controller FD: " << fd_controller << std::endl;
+        
+        std::cout<< "Creating poll handles for shell and controller sockets." << std::endl;
+        p_shell_poll = p_loop->resource<uvw::poll_handle>(fd_shell);
+        p_controller_poll = p_loop->resource<uvw::poll_handle>(fd_controller);
+
+        std::cout << "Setting up poll event handlers.(shell)" << std::endl;
+
+
 
         p_shell_poll->on<uvw::poll_event>(
             [this](uvw::poll_event&, uvw::poll_handle&)
             {
+                std::cout << "INSIDE Poll event on shell." << std::endl; 
                 if (this->p_hook)
                 {
                     this->p_hook->pre_hook();
@@ -67,7 +81,12 @@ namespace xeus
                 int ZMQ_DONTWAIT{ 1 }; // from zmq.h
                 if (auto msg = read_shell(ZMQ_DONTWAIT))
                 {
+                    std::cout << "xuv_runner: received message on shell" << std::endl;
                     notify_shell_listener(std::move(msg.value()));
+                }
+                else{
+                    std::cout << "xuv_runner: no message on shell" << std::endl;
+                    // No message received, could be interrupted system call
                 }
 
                 if (this->p_hook)
@@ -76,10 +95,11 @@ namespace xeus
                 }
             }
         );
-
+        std::cout << "Setting up poll event handlers. (controller)" << std::endl;
         p_controller_poll->on<uvw::poll_event>(
             [this](uvw::poll_event&, uvw::poll_handle&)
             {
+                std::cout << "INSIDE Poll event on controller." << std::endl;
                 if (this->p_hook)
                 {
                     this->p_hook->pre_hook();
@@ -88,6 +108,7 @@ namespace xeus
                 int ZMQ_DONTWAIT{ 1 }; // from zmq.h
                 if (auto msg = read_controller(ZMQ_DONTWAIT))
                 {
+                    std::cout << "xuv_runner: received message on controller" << std::endl;
                     std::string val{ msg.value() };
                     if (val == "stop")
                     {
@@ -100,6 +121,10 @@ namespace xeus
                         send_controller(std::move(rep));
                     }
                 }
+                else{
+                    std::cout << "xuv_runner: no message on controller" << std::endl;
+                    // No message received, could be interrupted system call
+                }
 
                 if (this->p_hook)
                 {
@@ -107,6 +132,7 @@ namespace xeus
                 }
             }
         );
+        std::cout << "Setting up poll error handlers. (shell)" << std::endl;
 
         p_shell_poll->on<uvw::error_event>(
             [](const uvw::error_event& e, uvw::poll_handle&)
@@ -114,7 +140,7 @@ namespace xeus
                 std::cerr << e.what() << std::endl;
             }
         );
-
+        std::cout << "Setting up poll error handlers. (controller)" << std::endl;
         p_controller_poll->on<uvw::error_event>(
             [](const uvw::error_event& e, uvw::poll_handle&)
             {
