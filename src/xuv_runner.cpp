@@ -36,9 +36,11 @@ namespace xeus
     
     void xuv_runner::run_impl()
     {
-        create_polls();
-        
         std::cout << "run_impl xuv_runner" << std::endl;
+        create_polls(); // create poll used to be called in the constructor
+                        // but that caused get_shell_fd to crash
+                        // likely because zmq sockets were not yet ready???
+
 
         std::cout << "Starting polls for shell and controller sockets." << std::endl;
         p_shell_poll->start(uvw::poll_handle::poll_event_flags::READABLE);
@@ -50,7 +52,9 @@ namespace xeus
         
         if (p_hook)
         {
+            std::cout << "run hook." << std::endl;
             p_hook->run(p_loop);
+            std::cout << "post run hook" << std::endl;
         }
         else
         {
@@ -91,7 +95,9 @@ namespace xeus
                 if (auto msg = read_shell(ZMQ_DONTWAIT))
                 {
                     std::cout << "xuv_runner: received message on shell" << std::endl;
+                    std::cout<<"content: "<< msg.value().content().dump(4)<<std::endl;
                     notify_shell_listener(std::move(msg.value()));
+                    std::cout << "xuv_runner: message on shell processed" << std::endl;
                 }
                 else{
                     std::cout << "xuv_runner: no message on shell" << std::endl;
@@ -100,8 +106,11 @@ namespace xeus
 
                 if (this->p_hook)
                 {
+                    std::cout << "post hook." << std::endl;
                     this->p_hook->post_hook();
+                    std::cout << "post hook done." << std::endl;
                 }
+
             }
         );
         std::cout << "Setting up poll event handlers. (controller)" << std::endl;
@@ -146,6 +155,7 @@ namespace xeus
         p_shell_poll->on<uvw::error_event>(
             [](const uvw::error_event& e, uvw::poll_handle&)
             {
+                std::cout << "Error event on shell poll." << std::endl;
                 std::cerr << e.what() << std::endl;
             }
         );
@@ -153,6 +163,7 @@ namespace xeus
         p_controller_poll->on<uvw::error_event>(
             [](const uvw::error_event& e, uvw::poll_handle&)
             {
+                std::cout << "Error event on controller poll." << std::endl;
                 std::cerr << e.what() << std::endl;
             }
         );
