@@ -31,14 +31,23 @@ namespace xeus
             std::cout << "No loop provided, using default loop." << std::endl;
             p_loop = uvw::loop::get_default();
         }
-        create_polls();
-    }
 
+    }
+    
     void xuv_runner::run_impl()
     {
-        p_shell_poll->start(uvw::poll_handle::poll_event_flags::READABLE);
-        p_controller_poll->start(uvw::poll_handle::poll_event_flags::READABLE);
+        create_polls();
+        
+        std::cout << "run_impl xuv_runner" << std::endl;
 
+        std::cout << "Starting polls for shell and controller sockets." << std::endl;
+        p_shell_poll->start(uvw::poll_handle::poll_event_flags::READABLE);
+
+        std::cout << "Starting polls for shell and controller sockets." << std::endl;
+        p_controller_poll->start(uvw::poll_handle::poll_event_flags::READABLE);
+        
+  
+        
         if (p_hook)
         {
             p_hook->run(p_loop);
