@@ -13,7 +13,7 @@
 #include <memory>
 #include <uvw.hpp>
 
-#include "xeus-uv/xeus-uv.hpp"
+#include "xeus-uv/xeus_uv.hpp"
 #include "xeus-uv/xhook_base.hpp"
 
 #include "xeus/xserver.hpp"
@@ -28,7 +28,7 @@ namespace nl = nlohmann;
 namespace xeus
 {
 
-    XEUX_UV_API
+    // XEUS_UV_API
     std::unique_ptr<xserver>
     make_xserver_uv(xcontext& context,
                     const xconfiguration& config,

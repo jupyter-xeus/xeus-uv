@@ -19,7 +19,7 @@ set(XEUS_UV_TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/test)
 # ===========
 
 # Project version
-file(STRINGS "${XEUS_UV_INCLUDE_DIR}/xeus-uv/xeus-uv.hpp" xeus_uv_version_defines
+file(STRINGS "${XEUS_UV_INCLUDE_DIR}/xeus-uv/xeus_uv.hpp" xeus_uv_version_defines
      REGEX "#define XEUS_UV_VERSION_(MAJOR|MINOR|PATCH)")
 foreach(ver ${xeus_uv_version_defines})
     if(ver MATCHES "#define XEUS_UV_VERSION_(MAJOR|MINOR|PATCH) +([^ ]+)$")
@@ -33,7 +33,7 @@ message(STATUS "xeus-uv version: v${XEUS_UV_VERSION}")
 # Binary version
 # See the following URL for explanations about the binary versioning
 # https://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html#Updating-version-info
-file(STRINGS "${XEUS_UV_INCLUDE_DIR}/xeus-uv/xeus-uv.hpp" xeus_uv_version_defines
+file(STRINGS "${XEUS_UV_INCLUDE_DIR}/xeus-uv/xeus_uv.hpp" xeus_uv_version_defines
     REGEX "#define XEUS_UV_BINARY_(CURRENT|REVISION|AGE)")
 foreach(ver ${xeus_uv_version_defines})
     if(ver MATCHES "#define XEUS_UV_BINARY_(CURRENT|REVISION|AGE) +([^ ]+)$")
@@ -95,7 +95,7 @@ message(STATUS "Found UVW_LIBRARY: ${UVW_LIBRARY}")
 # ============
 
 set(XEUS_UV_HEADERS
-    ${XEUS_UV_INCLUDE_DIR}/xeus-uv/xeus-uv.hpp
+    ${XEUS_UV_INCLUDE_DIR}/xeus-uv/xeus_uv.hpp
     ${XEUS_UV_INCLUDE_DIR}/xeus-uv/xhook_base.hpp
     ${XEUS_UV_INCLUDE_DIR}/xeus-uv/xserver_uv.hpp
 )
@@ -104,7 +104,6 @@ set(XEUS_UV_SOURCES
     ${XEUS_UV_SOURCE_DIR}/xhook_base.cpp
     ${XEUS_UV_SOURCE_DIR}/xserver_uv.cpp
     ${XEUS_UV_SOURCE_DIR}/xuv_runner.cpp
-    ${XEUS_UV_SOURCE_DIR}/xuv_runner.hpp
 )
 
 # Targets and link

@@ -13,7 +13,7 @@
 
 #include "xuv_runner.hpp"
 
-#include "xeus-uv/xeus-uv.hpp"
+#include "xeus-uv/xeus_uv.hpp"
 #include "xeus-uv/xhook_base.hpp"
 
 
