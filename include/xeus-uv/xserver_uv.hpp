@@ -28,7 +28,7 @@ namespace nl = nlohmann;
 namespace xeus
 {
 
-    // XEUS_UV_API
+    XEUS_UV_API
     std::unique_ptr<xserver>
     make_xserver_uv(xcontext& context,
                     const xconfiguration& config,
