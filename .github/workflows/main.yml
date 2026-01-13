@@ -76,11 +76,14 @@ jobs:
   win:
 
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: cmd /C call {0}
 
     strategy:
       fail-fast: false
       matrix:
-        os: [ windows-2019, windows-2022 ]
+        os: [ windows-2022, windows-2025 ]
 
     steps:
       - uses: actions/checkout@v4
@@ -99,9 +102,7 @@ jobs:
         run: mkdir build
 
       - name: Configure cmake
-        shell: cmd /C call {0}
         run: |
-          micromamba activate xeus-uv
           cmake .. ^
            -G Ninja ^
            -DCMAKE_BUILD_TYPE=Release ^
@@ -112,9 +113,7 @@ jobs:
         working-directory: build
 
       - name: Build
-        shell: cmd /C call {0}
         run: |
-          micromamba activate xeus-uv
           set CL=/MP
           ninja install
         working-directory: build
