@@ -28,6 +28,7 @@ namespace xeus
     {
         if (!p_loop)
         {
+            std::cerr << "No loop provided, using default loop." << std::endl;
             p_loop = uvw::loop::get_default();
         }
 
