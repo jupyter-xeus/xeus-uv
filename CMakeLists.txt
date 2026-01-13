@@ -87,6 +87,8 @@ endif()
 
 find_package(xeus-zmq ${xeus_zmq_REQUIRED_VERSION} REQUIRED)
 
+find_package(cppzmq REQUIRED)
+
 find_library(UVW_LIBRARY uvw)
 find_path(UVW_INCLUDE_DIR uvw.hpp)
 message(STATUS "Found UVW_LIBRARY: ${UVW_LIBRARY}")

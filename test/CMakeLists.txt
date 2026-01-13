@@ -9,16 +9,12 @@
 ############################################################################
 
 
-find_package(cppzmq REQUIRED)
+
 
 # add test executable
 add_executable(test_kernel 
 xmock_interpreter.cpp
 main.cpp)
-
-
-
-target_link_libraries(test_kernel PRIVATE xeus-zmq cppzmq)
 
 
 
