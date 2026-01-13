@@ -1,4 +1,5 @@
 ############################################################################
+# Copyright (c) 2026, Dr. Thorsten Beier                                   #
 # Copyright (c) 2024, Isabel Paredes                                       #
 # Copyright (c) 2024, QuantStack                                           #
 #                                                                          #
@@ -7,18 +8,41 @@
 # The full license is in the file LICENSE, distributed with this software. #
 ############################################################################
 
-# Unit tests
-# ==========
 
-cmake_minimum_required(VERSION 3.10)
 
-if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
-    project(xeus-uv-test)
+# add test executable
+add_executable(test_kernel 
+xmock_interpreter.cpp
+main.cpp)
 
-    enable_testing()
+# link to xeus-uv and xeus-zmq
+if(XEUS_UV_BUILD_SHARED_LIBS)
+    target_link_libraries(test_kernel PRIVATE xeus-uv)
+else()
+    target_link_libraries(test_kernel PRIVATE xeus-uv_static)
+endif()
 
-    find_package(xeus-uv REQUIRED CONFIG)
-    find_package(nlohmann_json QUIET CONFIG)
 
-    set(XEUS_UV_TEST_DIR ${CMAKE_CURRENT_LIST_DIR})
-endif ()
+enable_testing()
+
+
+find_program(PYTEST  
+    NAMES pytest-3 pytest py.test-3 py.test REQUIRED)
+
+
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_kernel/kernel.json.in"
+    "kernels/test_kernel/kernel.json"
+)
+
+
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_kernel.py"
+    "${CMAKE_CURRENT_BINARY_DIR}/"
+    COPYONLY)
+
+add_test(NAME test_kernel
+    COMMAND ${PYTEST} test_kernel.py)
+set_tests_properties(test_kernel
+    PROPERTIES
+    ENVIRONMENT "JUPYTER_PATH=${CMAKE_CURRENT_BINARY_DIR}")

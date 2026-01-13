@@ -15,9 +15,11 @@
 
 #include "xeus-uv/xeus_uv.hpp"
 #include "xeus-uv/xhook_base.hpp"
-
 #include "xeus-zmq/xshell_runner.hpp"
 
+
+#include "xeus-uv/xserver_uv.hpp"
+#include "xeus-uv/xhook_base.hpp"
 
 namespace xeus
 {
