@@ -22,6 +22,9 @@ else()
     target_link_libraries(test_kernel PRIVATE xeus-uv_static)
 endif()
 
+# include current source dir for xmock_interpreter.hpp
+target_include_directories(test_kernel PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+
 
 enable_testing()
 
