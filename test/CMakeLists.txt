@@ -28,6 +28,8 @@ endif()
 target_compile_definitions(test_kernel PUBLIC UVW_AS_LIB)
 
 
+target_compile_features(test_kernel PRIVATE cxx_std_17)
+
 # include current source dir for xmock_interpreter.hpp
 target_include_directories(test_kernel PRIVATE 
     ${CMAKE_CURRENT_SOURCE_DIR}
