@@ -23,7 +23,8 @@ else()
 endif()
 
 # include current source dir for xmock_interpreter.hpp
-target_include_directories(test_kernel PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(test_kernel PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}) 
+target_include_directories(test_kernel PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 
 enable_testing()
