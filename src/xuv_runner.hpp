@@ -18,9 +18,6 @@
 #include "xeus-zmq/xshell_runner.hpp"
 
 
-#include "xeus-uv/xserver_uv.hpp"
-#include "xeus-uv/xhook_base.hpp"
-
 namespace xeus
 {
 
@@ -46,6 +43,7 @@ namespace xeus
 
         std::shared_ptr<uvw::loop> p_loop{ nullptr };
         std::shared_ptr<uvw::poll_handle> p_shell_poll{ nullptr };
+        std::shared_ptr<uvw::poll_handle> p_controller_poll{ nullptr };
         std::unique_ptr<xhook_base> p_hook{ nullptr };
     };
 

@@ -1,5 +1,4 @@
 /***************************************************************************
-* Copyright (c) 2026, Dr. Thorsten Beier                                   *
 * Copyright (c) 2024, Isabel Paredes                                       *
 * Copyright (c) 2024, QuantStack                                           *
 *                                                                          *
@@ -41,7 +40,9 @@ namespace xeus
                         // likely because zmq sockets were not yet ready???
 
         p_shell_poll->start(uvw::poll_handle::poll_event_flags::READABLE);
+        p_controller_poll->start(uvw::poll_handle::poll_event_flags::READABLE);
           
+        
         if (p_hook)
         {
             p_hook->run(p_loop);
@@ -54,11 +55,14 @@ namespace xeus
 
     void xuv_runner::create_polls()
     {
-        // Get the file descriptor for the shell 
-        // and create a (libuv) poll handle to bind it to the loop
-        auto fd_shell = get_shell_fd();
+        // Get the file descriptor for the shell and controller sockets
+        // and create (libuv) poll handles to bind them to the loop
+
+        auto  fd_shell = get_shell_fd();
+        auto fd_controller = get_shell_controller_fd();
     
         p_shell_poll = p_loop->resource<uvw::poll_handle>(fd_shell);
+        p_controller_poll = p_loop->resource<uvw::poll_handle>(fd_controller);
 
         p_shell_poll->on<uvw::poll_event>(
             [this](uvw::poll_event&, uvw::poll_handle&)
@@ -69,11 +73,42 @@ namespace xeus
                 }
 
                 int ZMQ_DONTWAIT{ 1 }; // from zmq.h 
-
-                // Read **all** available messages
                 while (auto msg = read_shell(ZMQ_DONTWAIT))
                 {
+                    const std::string msg_type = msg->header()["msg_type"];
                     notify_shell_listener(std::move(msg.value()));
+                }
+
+
+                if (this->p_hook)
+                {
+                    this->p_hook->post_hook();
+                }
+            }
+        );
+
+        p_controller_poll->on<uvw::poll_event>(
+            [this](uvw::poll_event&, uvw::poll_handle&)
+            {
+                if (this->p_hook)
+                {
+                    this->p_hook->pre_hook();
+                }
+
+                int ZMQ_DONTWAIT{ 1 }; // from zmq.h
+                while (auto msg = read_controller(ZMQ_DONTWAIT))
+                {
+                    std::string val{ msg.value() };
+                    if (val == "stop")
+                    {
+                        send_controller(std::move(val));
+                        p_loop->stop();
+                    }
+                    else
+                    {
+                        std::string rep = notify_internal_listener(std::move(val));
+                        send_controller(std::move(rep));
+                    }
                 }
 
                 if (this->p_hook)
@@ -84,6 +119,12 @@ namespace xeus
         );
 
         p_shell_poll->on<uvw::error_event>(
+            [](const uvw::error_event& e, uvw::poll_handle&)
+            {
+                std::cerr << e.what() << std::endl;
+            }
+        );
+        p_controller_poll->on<uvw::error_event>(
             [](const uvw::error_event& e, uvw::poll_handle&)
             {
                 std::cerr << e.what() << std::endl;
