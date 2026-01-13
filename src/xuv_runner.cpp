@@ -54,10 +54,8 @@ namespace xeus
     void xuv_runner::create_polls()
     {
         // Get the file descriptor for the shell 
-        // and create (libuv) poll handles to bind them to the loop
-
-        auto  fd_shell = get_shell_fd();
-        auto fd_controller = get_shell_controller_fd();
+        // and create a (libuv) poll handle to bind it to the loop
+        auto fd_shell = get_shell_fd();
     
         p_shell_poll = p_loop->resource<uvw::poll_handle>(fd_shell);
 
@@ -70,6 +68,8 @@ namespace xeus
                 }
 
                 int ZMQ_DONTWAIT{ 1 }; // from zmq.h 
+
+                // Read **all** available messages
                 while (auto msg = read_shell(ZMQ_DONTWAIT))
                 {
                     notify_shell_listener(std::move(msg.value()));

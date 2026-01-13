@@ -55,7 +55,7 @@ jobs:
 
       - name: Build
         shell: bash -l {0}
-        run: make -j 4
+        run: make -j 2 install
         working-directory: build
 
       - name: Test xeus-uv
