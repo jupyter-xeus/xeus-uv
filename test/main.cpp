@@ -28,16 +28,11 @@ int main(int argc, char* argv[])
 
     auto context = xeus::make_zmq_context();
 
-
-
-
     auto make_xserver = [&](xeus::xcontext& context,
                             const xeus::xconfiguration& config,
                             nl::json::error_handler_t eh) {
         return xeus::make_xserver_uv(context, config, eh);
     };
-
-
 
     using interpreter_ptr = std::unique_ptr<xeus::xmock_interpreter>;
     interpreter_ptr interpreter = interpreter_ptr(new xeus::xmock_interpreter());
