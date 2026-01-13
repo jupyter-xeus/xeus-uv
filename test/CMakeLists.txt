@@ -19,7 +19,7 @@ main.cpp)
 if(XEUS_UV_BUILD_SHARED_LIBS)
     target_link_libraries(test_kernel PRIVATE xeus-uv)
 else()
-    target_link_libraries(test_kernel PRIVATE xeus-uv_static)
+    target_link_libraries(test_kernel PRIVATE xeus-uv-static)
 endif()
 
 target_compile_definitions(test_kernel PUBLIC UVW_AS_LIB)
