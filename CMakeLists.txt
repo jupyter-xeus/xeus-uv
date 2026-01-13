@@ -87,7 +87,19 @@ endif()
 
 find_package(xeus-zmq ${xeus_zmq_REQUIRED_VERSION} REQUIRED)
 
-find_package(cppzmq REQUIRED)
+if(XEUS_UV_STATIC_DEPENDENCIES)
+    # for a static build, xeus-zmq-static links to cppzmq (header-only).
+    # even though we link **privately** to cppzmq, we need to add it here
+    # since the xeus-zmqTargets.cmake containts `\$<LINK_ONLY:cppzmq>` for xeus-zmq-static:
+    #    
+    #    set_target_properties(xeus-zmq-static PROPERTIES
+    #       ....
+    #       INTERFACE_LINK_LIBRARIES "nlohmann_json::nlohmann_json;xeus;\$<LINK_ONLY:cppzmq>;\$<LINK_ONLY:OpenSSL::Crypto>;-framework CoreFoundation"
+    #    )
+    # without finding cppzmq here, the linker will believe that cppzmq is a library
+    # and complains about not finding it.
+    find_package(cppzmq REQUIRED)
+endif()
 
 find_library(UVW_LIBRARY uvw)
 find_path(UVW_INCLUDE_DIR uvw.hpp)
