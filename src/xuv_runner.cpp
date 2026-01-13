@@ -76,7 +76,6 @@ namespace xeus
                 int ZMQ_DONTWAIT{ 1 }; // from zmq.h 
                 while (auto msg = read_shell(ZMQ_DONTWAIT))
                 {
-                    const std::string msg_type = msg->header()["msg_type"];
                     notify_shell_listener(std::move(msg.value()));
                 }
 
