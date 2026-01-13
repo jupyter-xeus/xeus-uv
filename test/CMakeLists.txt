@@ -9,17 +9,24 @@
 ############################################################################
 
 
+find_package(cppzmq REQUIRED)
 
 # add test executable
 add_executable(test_kernel 
 xmock_interpreter.cpp
 main.cpp)
 
+
+
+target_link_libraries(test_kernel PRIVATE xeus-zmq cppzmq)
+
+
+
 # link to xeus-uv and xeus-zmq
 if(XEUS_UV_BUILD_SHARED_LIBS)
     target_link_libraries(test_kernel PRIVATE xeus-uv)
 else()
-    target_link_libraries(test_kernel PRIVATE xeus-uv-static)
+    target_link_libraries(test_kernel PRIVATE xeus-uv-static xeus-zmq-static)
 endif()
 
 target_compile_definitions(test_kernel PUBLIC UVW_AS_LIB)
