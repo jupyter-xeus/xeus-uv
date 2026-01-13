@@ -1,4 +1,5 @@
 /***************************************************************************
+* Copyright (c) 2026, Dr. Thorsten Beier                                   *
 * Copyright (c) 2024, Isabel Paredes                                       *
 * Copyright (c) 2024, QuantStack                                           *
 *                                                                          *
