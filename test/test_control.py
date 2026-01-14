@@ -5,13 +5,6 @@ from jupyter_client import KernelManager
 import time
 from pathlib import Path
 
-THIS_DIR = Path(__file__).parent
-KERNEL_DIR = THIS_DIR / "kernels"
-
-print("KERNEL_DIR:", KERNEL_DIR)
-
-ksm = KernelSpecManager()
-ksm.kernel_dirs = [str(KERNEL_DIR)]
 
 def test_kernel_shutdown():
 
