@@ -20,6 +20,11 @@ def test_kernel_shutdown():
     # Give the kernel time to respond and exit
     time.sleep(5)
 
+    for i in range(10):
+        if not km.is_alive():
+            break
+        time.sleep(0.5)
+
     # Assert kernel is no longer alive
     assert not km.is_alive()
 
