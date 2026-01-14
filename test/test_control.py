@@ -8,10 +8,6 @@ from pathlib import Path
 
 def test_kernel_shutdown():
 
-    ksm = KernelSpecManager()
-    ksm.kernel_dirs = [str(KERNEL_DIR)]
-
-
     km = KernelManager(kernel_name="test_kernel")
     km.start_kernel()
 
