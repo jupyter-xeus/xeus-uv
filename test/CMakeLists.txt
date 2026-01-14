@@ -9,13 +9,10 @@
 ############################################################################
 
 
-
-
 # add test executable
 add_executable(test_kernel 
 xmock_interpreter.cpp
 main.cpp)
-
 
 
 # link to xeus-uv and xeus-zmq
@@ -62,8 +59,6 @@ add_test(NAME test_kernel
 set_tests_properties(test_kernel
     PROPERTIES
     ENVIRONMENT "JUPYTER_PATH=${CMAKE_CURRENT_BINARY_DIR}")
-
-
 
 configure_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/test_control.py"
