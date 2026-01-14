@@ -9,3 +9,9 @@ dependencies:
 - xeus-zmq>=3.0,<4.0
 - libuvw
 - nlohmann_json=3.11.3
+- zeromq
+- zeromq-static
+- cppzmq
+# Test dependencies
+- pytest
+- jupyter_kernel_test>=0.6,<0.7

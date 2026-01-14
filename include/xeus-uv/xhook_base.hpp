@@ -13,7 +13,7 @@
 #include <memory>
 #include <uvw.hpp>
 
-#include "xeus-uv.hpp"
+#include "xeus_uv.hpp"
 
 
 namespace xeus

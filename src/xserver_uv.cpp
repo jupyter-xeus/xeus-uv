@@ -13,6 +13,7 @@
 #include "xuv_runner.hpp"
 
 #include "xeus-uv/xhook_base.hpp"
+#include "xeus-uv/xserver_uv.hpp"
 
 #include "xeus-zmq/xcontrol_default_runner.hpp"
 #include "xeus-zmq/xserver_zmq_split.hpp"

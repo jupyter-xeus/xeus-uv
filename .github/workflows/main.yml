@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, ubuntu-24.04, macos-13]
+        os: [ubuntu-22.04, ubuntu-24.04, macos-14]
         xeus_static_dependencies: [0]
         xeus_build_shared_lib: [1]
         include:
@@ -49,12 +49,13 @@ jobs:
            -DCMAKE_PREFIX_PATH=$CONDA_PREFIX \
            -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX \
            -DXEUS_UV_STATIC_DEPENDENCIES=${{ matrix.xeus_static_dependencies }} \
-           -DXEUS_UV_BUILD_SHARED_LIBS=${{ matrix.xeus_build_shared_lib }}
+           -DXEUS_UV_BUILD_SHARED_LIBS=${{ matrix.xeus_build_shared_lib }} \
+           -DXEUS_UV_BUILD_STATIC_LIBS=$((1 - ${{ matrix.xeus_build_shared_lib }}))
         working-directory: build
 
       - name: Build
         shell: bash -l {0}
-        run: make -j 4
+        run: make -j 2 install
         working-directory: build
 
       - name: Test xeus-uv

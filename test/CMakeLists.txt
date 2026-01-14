@@ -1,4 +1,5 @@
 ############################################################################
+# Copyright (c) 2026, Dr. Thorsten Beier                                   #
 # Copyright (c) 2024, Isabel Paredes                                       #
 # Copyright (c) 2024, QuantStack                                           #
 #                                                                          #
@@ -7,18 +8,56 @@
 # The full license is in the file LICENSE, distributed with this software. #
 ############################################################################
 
-# Unit tests
-# ==========
 
-cmake_minimum_required(VERSION 3.10)
 
-if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
-    project(xeus-uv-test)
 
-    enable_testing()
+# add test executable
+add_executable(test_kernel 
+xmock_interpreter.cpp
+main.cpp)
 
-    find_package(xeus-uv REQUIRED CONFIG)
-    find_package(nlohmann_json QUIET CONFIG)
 
-    set(XEUS_UV_TEST_DIR ${CMAKE_CURRENT_LIST_DIR})
-endif ()
+
+# link to xeus-uv and xeus-zmq
+if(XEUS_UV_BUILD_SHARED_LIBS)
+    target_link_libraries(test_kernel PRIVATE xeus-uv)
+else()
+    target_link_libraries(test_kernel PRIVATE xeus-uv-static xeus-zmq-static)
+endif()
+
+target_compile_definitions(test_kernel PUBLIC UVW_AS_LIB)
+
+
+target_compile_features(test_kernel PRIVATE cxx_std_17)
+
+# include current source dir for xmock_interpreter.hpp
+target_include_directories(test_kernel PRIVATE 
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_SOURCE_DIR}/include
+    ${UVW_INCLUDE_DIRS}
+ )
+
+
+enable_testing()
+
+
+find_program(PYTEST  
+    NAMES pytest-3 pytest py.test-3 py.test REQUIRED)
+
+
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_kernel/kernel.json.in"
+    "kernels/test_kernel/kernel.json"
+)
+
+
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_kernel.py"
+    "${CMAKE_CURRENT_BINARY_DIR}/"
+    COPYONLY)
+
+add_test(NAME test_kernel
+    COMMAND ${PYTEST} test_kernel.py)
+set_tests_properties(test_kernel
+    PROPERTIES
+    ENVIRONMENT "JUPYTER_PATH=${CMAKE_CURRENT_BINARY_DIR}")

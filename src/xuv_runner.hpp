@@ -13,9 +13,8 @@
 #include <memory>
 #include <uvw.hpp>
 
-#include "xeus-uv/xeus-uv.hpp"
+#include "xeus-uv/xeus_uv.hpp"
 #include "xeus-uv/xhook_base.hpp"
-
 #include "xeus-zmq/xshell_runner.hpp"
 
 

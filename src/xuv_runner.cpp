@@ -13,7 +13,7 @@
 
 #include "xuv_runner.hpp"
 
-#include "xeus-uv/xeus-uv.hpp"
+#include "xeus-uv/xeus_uv.hpp"
 #include "xeus-uv/xhook_base.hpp"
 
 
@@ -31,14 +31,19 @@ namespace xeus
             std::cerr << "No loop provided, using default loop." << std::endl;
             p_loop = uvw::loop::get_default();
         }
-        create_polls();
-    }
 
+    }
+    
     void xuv_runner::run_impl()
     {
+        create_polls(); // create poll used to be called in the constructor
+                        // but that caused get_shell_fd to crash
+                        // likely because zmq sockets were not yet ready???
+
         p_shell_poll->start(uvw::poll_handle::poll_event_flags::READABLE);
         p_controller_poll->start(uvw::poll_handle::poll_event_flags::READABLE);
-
+          
+        
         if (p_hook)
         {
             p_hook->run(p_loop);
@@ -53,8 +58,12 @@ namespace xeus
     {
         // Get the file descriptor for the shell and controller sockets
         // and create (libuv) poll handles to bind them to the loop
-        p_shell_poll = p_loop->resource<uvw::poll_handle>(get_shell_fd());
-        p_controller_poll = p_loop->resource<uvw::poll_handle>(get_shell_controller_fd());
+
+        auto  fd_shell = get_shell_fd();
+        auto fd_controller = get_shell_controller_fd();
+    
+        p_shell_poll = p_loop->resource<uvw::poll_handle>(fd_shell);
+        p_controller_poll = p_loop->resource<uvw::poll_handle>(fd_controller);
 
         p_shell_poll->on<uvw::poll_event>(
             [this](uvw::poll_event&, uvw::poll_handle&)
@@ -64,11 +73,12 @@ namespace xeus
                     this->p_hook->pre_hook();
                 }
 
-                int ZMQ_DONTWAIT{ 1 }; // from zmq.h
-                if (auto msg = read_shell(ZMQ_DONTWAIT))
+                int ZMQ_DONTWAIT{ 1 }; // from zmq.h 
+                while (auto msg = read_shell(ZMQ_DONTWAIT))
                 {
                     notify_shell_listener(std::move(msg.value()));
                 }
+
 
                 if (this->p_hook)
                 {
@@ -86,7 +96,7 @@ namespace xeus
                 }
 
                 int ZMQ_DONTWAIT{ 1 }; // from zmq.h
-                if (auto msg = read_controller(ZMQ_DONTWAIT))
+                while (auto msg = read_controller(ZMQ_DONTWAIT))
                 {
                     std::string val{ msg.value() };
                     if (val == "stop")
@@ -114,13 +124,13 @@ namespace xeus
                 std::cerr << e.what() << std::endl;
             }
         );
-
         p_controller_poll->on<uvw::error_event>(
             [](const uvw::error_event& e, uvw::poll_handle&)
             {
                 std::cerr << e.what() << std::endl;
             }
         );
+
 
     }
 

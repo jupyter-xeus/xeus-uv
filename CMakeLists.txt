@@ -1,4 +1,5 @@
 ############################################################################
+# Copyright (c) 2026, Dr. Thorsten Beier                                   #
 # Copyright (c) 2024, Isabel Paredes                                       #
 # Copyright (c) 2024, QuantStack                                           #
 #                                                                          #
@@ -19,7 +20,7 @@ set(XEUS_UV_TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/test)
 # ===========
 
 # Project version
-file(STRINGS "${XEUS_UV_INCLUDE_DIR}/xeus-uv/xeus-uv.hpp" xeus_uv_version_defines
+file(STRINGS "${XEUS_UV_INCLUDE_DIR}/xeus-uv/xeus_uv.hpp" xeus_uv_version_defines
      REGEX "#define XEUS_UV_VERSION_(MAJOR|MINOR|PATCH)")
 foreach(ver ${xeus_uv_version_defines})
     if(ver MATCHES "#define XEUS_UV_VERSION_(MAJOR|MINOR|PATCH) +([^ ]+)$")
@@ -33,7 +34,7 @@ message(STATUS "xeus-uv version: v${XEUS_UV_VERSION}")
 # Binary version
 # See the following URL for explanations about the binary versioning
 # https://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html#Updating-version-info
-file(STRINGS "${XEUS_UV_INCLUDE_DIR}/xeus-uv/xeus-uv.hpp" xeus_uv_version_defines
+file(STRINGS "${XEUS_UV_INCLUDE_DIR}/xeus-uv/xeus_uv.hpp" xeus_uv_version_defines
     REGEX "#define XEUS_UV_BINARY_(CURRENT|REVISION|AGE)")
 foreach(ver ${xeus_uv_version_defines})
     if(ver MATCHES "#define XEUS_UV_BINARY_(CURRENT|REVISION|AGE) +([^ ]+)$")
@@ -49,7 +50,7 @@ message(STATUS "xeus-uv binary version: v${XEUS_UV_BINARY_VERSION}")
 
 # Compilation options
 option(XEUS_UV_BUILD_SHARED_LIBS "Build xeus shared library." ON)
-option(XEUS_UV_BUILD_STATIC_LIBS "Build xeus static library (default if BUILD_SHARED_LIBS is OFF)." ON)
+option(XEUS_UV_BUILD_STATIC_LIBS "Build xeus static library (default if BUILD_SHARED_LIBS is OFF)." OFF)
 option(XEUS_UV_STATIC_DEPENDENCIES "link statically with xeus dependencies" OFF)
 
 # Test options
@@ -87,6 +88,20 @@ endif()
 
 find_package(xeus-zmq ${xeus_zmq_REQUIRED_VERSION} REQUIRED)
 
+if(XEUS_UV_STATIC_DEPENDENCIES)
+    # for a static build, xeus-zmq-static links to cppzmq (header-only).
+    # even though we link **privately** to cppzmq, we need to add it here
+    # since the xeus-zmqTargets.cmake containts `\$<LINK_ONLY:cppzmq>` for xeus-zmq-static:
+    #    
+    #    set_target_properties(xeus-zmq-static PROPERTIES
+    #       ....
+    #       INTERFACE_LINK_LIBRARIES "nlohmann_json::nlohmann_json;xeus;\$<LINK_ONLY:cppzmq>;\$<LINK_ONLY:OpenSSL::Crypto>;-framework CoreFoundation"
+    #    )
+    # without finding cppzmq here, the linker will believe that cppzmq is a library
+    # and complains about not finding it.
+    find_package(cppzmq REQUIRED)
+endif()
+
 find_library(UVW_LIBRARY uvw)
 find_path(UVW_INCLUDE_DIR uvw.hpp)
 message(STATUS "Found UVW_LIBRARY: ${UVW_LIBRARY}")
@@ -95,7 +110,7 @@ message(STATUS "Found UVW_LIBRARY: ${UVW_LIBRARY}")
 # ============
 
 set(XEUS_UV_HEADERS
-    ${XEUS_UV_INCLUDE_DIR}/xeus-uv/xeus-uv.hpp
+    ${XEUS_UV_INCLUDE_DIR}/xeus-uv/xeus_uv.hpp
     ${XEUS_UV_INCLUDE_DIR}/xeus-uv/xhook_base.hpp
     ${XEUS_UV_INCLUDE_DIR}/xeus-uv/xserver_uv.hpp
 )
@@ -104,7 +119,6 @@ set(XEUS_UV_SOURCES
     ${XEUS_UV_SOURCE_DIR}/xhook_base.cpp
     ${XEUS_UV_SOURCE_DIR}/xserver_uv.cpp
     ${XEUS_UV_SOURCE_DIR}/xuv_runner.cpp
-    ${XEUS_UV_SOURCE_DIR}/xuv_runner.hpp
 )
 
 # Targets and link
