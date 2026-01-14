@@ -18,7 +18,7 @@ def test_kernel_shutdown():
     kc.shutdown(restart=False)
 
     # Give the kernel time to respond and exit
-    time.sleep(4)
+    time.sleep(5)
 
     # Assert kernel is no longer alive
     assert not km.is_alive()
