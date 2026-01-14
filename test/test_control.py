@@ -49,8 +49,5 @@ def test_shutdown_reply_message():
     )
 
     reply = kc.control_channel.get_msg(timeout=5)
-
     assert reply["header"]["msg_type"] == "shutdown_reply"
-    
-
     kc.stop_channels()
